@@ -12,7 +12,8 @@ echo \
   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 apt-get update
-apt-get -y install docker-ce docker-ce-cli containerd.io
+apt-get -y install docker-ce docker-ce-cli containerd.io \
+  git docker-compose
 systemctl enable --now docker
 adduser vagrant docker
 
@@ -25,3 +26,9 @@ systemctl disable --now systemd-resolved
 rm /etc/resolv.conf
 echo "nameserver 192.168.100.2" > /etc/resolv.conf
 echo "search kurs.iad" >> /etc/resolv.conf
+
+# Repo klonen und Container starten
+mkdir -p /home/git && cd /home/git
+git clone https://github.com/JoergEF/chatbot_docker
+cd chatbot_docker && mkdir v3/model
+docker-compose up -d
